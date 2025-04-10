@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Unit Converter</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #2193b0, #6dd5ed);
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            border-radius: 10px 10px 0 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .tabs {
+            display: flex;
+            background-color: #fff;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin: 20px 0;
+        }
+        
+        .tab-links {
+            width: 200px;
+            background-color: #f0f0f0;
+        }
+        
+        .tab-button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: none;
+            border: none;
+            text-align: left;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+        }
+        
+        .tab-button:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .tab-button.active {
+            background-color: #fff;
+            border-left: 4px solid #2193b0;
+            font-weight: bold;
+        }
+        
+        .tab-content {
+            flex: 1;
+            padding: 30px;
+        }
+        
+        .tab-pane {
+            display: none;
+        }
+        
+        .tab-pane.active {
+            display: block;
+        }
+        
+        .converter-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        label {
+            font-weight: bold;
+            width: 60px;
+        }
+        
+        input[type="number"] {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        select {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            min-width: 150px;
+            font-size: 1rem;
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .convert-btn {
+            background-color: #2193b0;
+            color: white;
+            flex: 2;
+        }
+        
+        .convert-btn:hover {
+            background-color: #1a7a8f;
+        }
+        
+        .swap-btn {
+            background-color: #f0f0f0;
+            color: #333;
+            flex: 1;
+        }
+        
+        .swap-btn:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .formula {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            font-style: italic;
+            color: #666;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+            font-size: 0.9rem;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab-links {
+                width: 100%;
+                display: flex;
+                overflow-x: auto;
+            }
+            
+            .tab-button {
+                border-left: none;
+                border-bottom: 4px solid transparent;
+            }
+            
+            .tab-button.active {
+                border-left: none;
+                border-bottom: 4px solid #2193b0;
+            }
+            
+            .input-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            label {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Multi-Unit Converter</h1>
+            <p class="tagline">Easy and accurate conversions for everyday use</p>
+        </header>
+        
+        <div class="tabs">
+            <div class="tab-links">
+                <button class="tab-button active" onclick="openTab(event, 'length')">Length</button>
+                <button class="tab-button" onclick="openTab(event, 'weight')">Weight</button>
+                <button class="tab-button" onclick="openTab(event, 'temperature')">Temperature</button>
+                <button class="tab-button" onclick="openTab(event, 'area')">Area</button>
+                <button class="tab-button" onclick="openTab(event, 'volume')">Volume</button>
+                <button class="tab-button" onclick="openTab(event, 'speed')">Speed</button>
+                <button class="tab-button" onclick="openTab(event, 'time')">Time</button>
+                <button class="tab-button" onclick="openTab(event, 'data')">Data</button>
+            </div>
+            
+            <div class="tab-content">
+                <div id="length" class="tab-pane active">
+                    <h2>Length Converter</h2>
+                    <div class="converter-form">
+                        <div class="input-group">
+                            <label for="length-from">From:</label>
+                            <input type="number" id="length-from" placeholder="Enter value">
+                            <select id="length-from-unit">
+                                <option value="m">Meter</option>
+                                <option value="km">Kilometer</option>
+                                <option value="cm">Centimeter</option>
+                                <option value="mm">Millimeter</option>
+                                <option value="mi">Mile</option>
+                                <option value="yd">Yard</option>
+                                <option value="ft">Foot</option>
+                                <option value="in">Inch</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label for="length-to">To:</label>
+                            <input type="number" id="length-to" readonly>
+                            <select id="length-to-unit">
+                                <option value="m">Meter</option>
+                                <option value="km">Kilometer</option>
+                                <option value="cm" selected>Centimeter</option>
+                                <option value="mm">Millimeter</option>
+                                <option value="mi">Mile</option>
+                                <option value="yd">Yard</option>
+                                <option value="ft">Foot</option>
+                                <option value="in">Inch</option>
+                            </select>
+                        </div>
+                        <div class="buttons">
+                            <button class="convert-btn" onclick="convert('length')">Convert</button>
+                            <button class="swap-btn" onclick="swap('length')">Swap</button>
+                        </div>
+                        <div class="formula">
+                            Length Conversion Formula: 1 m = 100 cm = 1000 mm = 0.001 km = 39.37 in = 3.28 ft = 1.09 yd = 0.00062 mi
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="weight" class="tab-pane">
+                    <h2>Weight Converter</h2>
+                    <div class="converter-form">
+                        <div class="input-group">
+                            <label for="weight-from">From:</label>
+                            <input type="number" id="weight-from" placeholder="Enter value">
+                            <select id="weight-from-unit">
+                                <option value="kg">Kilogram</option>
+                                <option value="g">Gram</option>
+                                <option value="mg">Milligram</option>
+                                <option value="t">Metric Ton</option>
+                                <option value="lb">Pound</option>
+                                <option value="oz">Ounce</option>
+                                <option value="st">Stone</option>
+                                <option value="ust">US Ton</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label for="weight-to">To:</label>
+                            <input type="number" id="weight-to" readonly>
+                            <select id="weight-to-unit">
+                                <option value="kg">Kilogram</option>
+                                <option value="g" selected>Gram</option>
+                                <option value="mg">Milligram</option>
+                                <option value="t">Metric Ton</option>
+                                <option value="lb">Pound</option>
+                                <option value="oz">Ounce</option>
+                                <option value="st">Stone</option>
+                                <option value="ust">US Ton</option>
+                            </select>
+                        </div>
+                        <div class="buttons">
+                            <button class="convert-btn" onclick="convert('weight')">Convert</button>
+                            <button class="swap-btn" onclick="swap('weight')">Swap</button>
+                        </div>
+                        <div class="formula">
+                            Weight Conversion Formula: 1 kg = 1000 g = 2.205 lb = 35.274 oz = 0.001 metric ton
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="temperature" class="tab-pane">
+                    <h2>Temperature Converter</h2>
+                    <div class="converter-form">
+                        <div class="input-group">
+                            <label for="temp-from">From:</label>
+                            <input type="number" id="temp-from" placeholder="Enter value">
+                            <select id="temp-from-unit">
+                                <option value="c">Celsius</option>
+                                <option value="f">Fahrenheit</option>
+                                <option value="k">Kelvin</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label for="temp-to">To:</label>
+                            <input type="number" id="temp-to" readonly>
+                            <select id="temp-to-unit">
+                                <option value="c">Celsius</option>
+                                <option value="f" selected>Fahrenheit</option>
+                                <option value="k">Kelvin</option>
+                            </select>
+                        </div>
+                        <div class="buttons">
+                            <button class="convert-btn" onclick="convert('temperature')">Convert</button>
+                            <button class="swap-btn" onclick="swap('temperature')">Swap</button>
+                        </div>
+                        <div class="formula">
+                            Temperature Conversion Formula: °C = (°F - 32) × 5/9, °F = °C × 9/5 + 32, K = °C + 273.15
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="area" class="tab-pane">
+                    <h2>Area Converter</h2>
+                    <div class="converter-form">
+                        <div class="input-group">
+                            <label for="area-from">From:</label>
+                            <input type="number" id="area-from" placeholder="Enter value">
+                            <select id="area-from-unit">
+                                <option value="m2">Square Meter</option>
+                                <option value="km2">Square Kilometer</option>
+                                <option value="cm2">Square Centimeter</option>
+                                <option value="mm2">Square Millimeter</option>
+                                <option value="ha">Hectare</option>
+                                <option value="acre">Acre</option>
+                                <option value="mi2">Square Mile</option>
+                                <option value="yd2">Square Yard</option>
+                                <option value="ft2">Square Foot</option>
+                                <option value="in2">Square Inch</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label for="area-to">To:</label>
+                            <input type="number" id="area-to" readonly>
+                            <select id="area-to-unit">
+                                <option value="m2">Square Meter</option>
+                                <option value="km2">Square Kilometer</option>
+                                <option value="cm2" selected>Square Centimeter</option>
+                                <option value="mm2">Square Millimeter</option>
+                                <option value="ha">Hectare</option>
+                                <option value="acre">Acre</option>
+                                <option value="mi2">Square Mile</option>
+                                <option value="yd2">Square Yard</option>
+                                <option value="ft2">Square Foot</option>
+                                <option value="in2">Square Inch</option>
+                            </select>
+                        </div>
+                        <div class="buttons">
+                            <button class="convert-btn" onclick="convert('area')">Convert</button>
+                            <button class="swap-btn" onclick="swap('area')">Swap</button>
+                        </div>
+                        <div class="formula">
+                            Area Conversion Formula: 1 m² = 10.764 ft² = 1.196 yd² = 0.0001 ha = 0.000247 acre
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="volume" class="tab-pane">
+                    <h2>Volume Converter</h2>
+                    <div class="converter-form">
+                        <div class="input-group">
+                            <label for="volume-from">From:</label>
+                            <input type="number" id="volume-from" placeholder="Enter value">
+                            <select id="volume-from-unit">
+                                <option value="m3">Cubic Meter</option>
+                                <option value="cm3">Cubic Centimeter</option>
+                                <option value="l">Liter</option>
+                                <option value="ml">Milliliter</option>
+                                <option value="gal">Gallon (US)</option>
+                                <option value="qt">Quart (US)</option>
+                                <option value="pt">Pint (US)</option>
+                                <option value="floz">Fluid Ounce (US)</option>
+                                <option value="ukgal">Gallon (UK)</option>
+                                <option value="cup">Cup</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label for="volume-to">To:</label>
+                            <input type="number" id="volume-to" readonly>
+                            <select id="volume-to-unit">
+                                <option value="m3">Cubic Meter</option>
+                                <option value="cm3">Cubic Centimeter</option>
+                                <option value="l" selected>Liter</option>
+                                <option value="ml">Milliliter</option>
+                                <option value="gal">Gallon (US)</option>
+                                <option value="qt">Quart (US)</option>
+                                <option value="pt">Pint (US)</option>
+                                <option value="floz">Fluid Ounce (US)</option>
+                                <option value="ukgal">Gallon (UK)</option>
+                                <option value="cup">Cup</option>
+                            </select>
+                        </div>
+                        <div class="buttons">
+                            <button class="convert-btn" onclick="convert('volume')">Convert</button>
+                            <button class="swap-btn" onclick="swap('volume')">Swap</button>
+                        </div>
+                        <div class="formula">
+                            Volume Conversion Formula: 1 m³ = 1000 L = 264.172 gal (US) = 35.315 ft³
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="speed" class="tab-pane">
+                    <h2>Speed Converter</h2>
+                    <div class="converter-form">
+                        <div class="input-group">
+                            <label for="speed-from">From:</label>
+                            <input type="number" id="speed-from" placeholder="Enter value">
+                            <select id="speed-from-unit">
+                                <option value="mps">Meters per Second</option>
+                                <option value="kph">Kilometers per Hour</option>
+                                <option value="mph">Miles per Hour</option>
+                                <option value="fps">Feet per Second</option>
+                                <option value="knot">Knots</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label for="speed-to">To:</label>
+                            <input type="number" id="speed-to" readonly>
+                            <select id="speed-to-unit">
+                                <option value="mps">Meters per Second</option>
+                                <option value="kph" selected>Kilometers per Hour</option>
+                                <option value="mph">Miles per Hour</option>
+                                <option value="fps">Feet per Second</option>
+                                <option value="knot">Knots</option>
+                            </select>
+                        </div>
+                        <div class="buttons">
+                            <button class="convert-btn" onclick="convert('speed')">Convert</button>
+                            <button class="swap-btn" onclick="swap('speed')">Swap</button>
+                        </div>
+                        <div class="formula">
+                            Speed Conversion Formula: 1 m/s = 3.6 km/h = 2.237 mph = 3.281 ft/s = 1.944 knots
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="time" class="tab-pane">
+                    <h2>Time Converter</h2>
+                    <div class="converter-form">
+                        <div class="input-group">
+                            <label for="time-from">From:</label>
+                            <input type="number" id="time-from" placeholder="Enter value">
+                            <select id="time-from-unit">
+                                <option value="s">Second</option>
+                                <option value="min">Minute</option>
+                                <option value="h">Hour</option>
+                                <option value="day">Day</option>
+                                <option value="week">Week</option>
+                                <option value="month">Month</option>
+                                <option value="year">Year</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label for="time-to">To:</label>
+                            <input type="number" id="time-to" readonly>
+                            <select id="time-to-unit">
+                                <option value="s">Second</option>
+                                <option value="min" selected>Minute</option>
+                                <option value="h">Hour</option>
+                                <option value="day">Day</option>
+                                <option value="week">Week</option>
+                                <option value="month">Month</option>
+                                <option value="year">Year</option>
+                            </select>
+                        </div>
+                        <div class="buttons">
+                            <button class="convert-btn" onclick="convert('time')">Convert</button>
+                            <button class="swap-btn" onclick="swap('time')">Swap</button>
+                        </div>
+                        <div class="formula">
+                            Time Conversion Formula: 1 min = 60 sec, 1 hr = 60 min, 1 day = 24 hr, 1 week = 7 days
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="data" class="tab-pane">
+                    <h2>Data Converter</h2>
+                    <div class="converter-form">
+                        <div class="input-group">
+                            <label for="data-from">From:</label>
+                            <input type="number" id="data-from" placeholder="Enter value">
+                            <select id="data-from-unit">
+                                <option value="bit">Bit</option>
+                                <option value="byte">Byte</option>
+                                <option value="kb">Kilobit</option>
+                                <option value="kB">Kilobyte</option>
+                                <option value="mb">Megabit</option>
+                                <option value="MB">Megabyte</option>
+                                <option value="gb">Gigabit</option>
+                                <option value="GB">Gigabyte</option>
+                                <option value="tb">Terabit</option>
+                                <option value="TB">Terabyte</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label for="data-to">To:</label>
+                            <input type="number" id="data-to" readonly>
+                            <select id="data-to-unit">
+                                <option value="bit">Bit</option>
+                                <option value="byte">Byte</option>
+                                <option value="kb">Kilobit</option>
+                                <option value="kB" selected>Kilobyte</option>
+                                <option value="mb">Megabit</option>
+                                <option value="MB">Megabyte</option>
+                                <option value="gb">Gigabit</option>
+                                <option value="GB">Gigabyte</option>
+                                <option value="tb">Terabit</option>
+                                <option value="TB">Terabyte</option>
+                            </select>
+                        </div>
+                        <div class="buttons">
+                            <button class="convert-btn" onclick="convert('data')">Convert</button>
+                            <button class="swap-btn" onclick="swap('data')">Swap</button>
+                        </div>
+                        <div class="formula">
+                            Data Conversion Formula: 1 Byte = 8 bits, 1 KB = 1000 bytes, 1 MB = 1000 KB, 1 GB = 1000 MB
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>&copy; 2025 Multi-Unit Converter. All rights reserved.</p>
+        </footer>
+    </div>
+    
+    <script>
+        
+        function openTab(evt, tabName) {
+            
+            const tabPanes = document.getElementsByClassName("tab-pane");
+            for (let i = 0; i < tabPanes.length; i++) {
+                tabPanes[i].classList.remove("active");
+            }
+            
+           
+            const tabButtons = document.getElementsByClassName("tab-button");
+            for (let i = 0; i < tabButtons.length; i++) {
+                tabButtons[i].classList.remove("active");
+            }
+            
+            
+            document.getElementById(tabName).classList.add("active");
+            
+           
+            evt.currentTarget.classList.add("active");
+        }
+        
+       
+        const conversionFactors = {
+           
+            length: {
+                m: 1,
+                km: 1000,
+                cm: 0.01,
+                mm: 0.001,
+                mi: 1609.344,
+                yd: 0.9144,
+                ft: 0.3048,
+                in: 0.0254
+            },
+            
+            weight: {
+                kg: 1,
+                g: 0.001,
+                mg: 0.000001,
+                t: 1000,
+                lb: 0.45359237,
+                oz: 0.028349523125,
+                st: 6.35029318,
+                ust: 907.18474
+            },
+          
+            area: {
+                m2: 1,
+                km2: 1000000,
+                cm2: 0.0001,
+                mm2: 0.000001,
+                ha: 10000,
+                acre: 4046.8564224,
+                mi2: 2589988.110336,
+                yd2: 0.83612736,
+                ft2: 0.09290304,
+                in2: 0.00064516
+            },
+          
+            volume: {
+                m3: 1,
+                cm3: 0.000001,
+                l: 0.001,
+                ml: 0.000001,
+                gal: 0.00378541,
+                qt: 0.000946353,
+                pt: 0.000473176,
+                floz: 0.0000295735,
+                ukgal: 0.00454609,
+                cup: 0.000236588
+            },
+           
+            speed: {
+                mps: 1,
+                kph: 0.277778,
+                mph: 0.44704,
+                fps: 0.3048,
+                knot: 0.514444
+            },
+           
+            time: {
+                s: 1,
+                min: 60,
+                h: 3600,
+                day: 86400,
+                week: 604800,
+                month: 2592000,
+                year: 31536000
+            },
+            
+            data: {
+                bit: 1,
+                byte: 8,
+                kb: 1000,
+                kB: 8000,
+                mb: 1000000,
+                MB: 8000000,
+                gb: 1000000000,
+                GB: 8000000000,
+                tb: 1000000000000,
+                TB: 8000000000000
+            }
+        };
+        
+       
+        function convertTemperature(value, fromUnit, toUnit) {
+            let celsius;
+            
+          
+            switch (fromUnit) {
+                case 'c':
+                    celsius = value;
+                    break;
+                case 'f':
+                    celsius = (value - 32) * 5 / 9;
+                    break;
+                case 'k':
+                    celsius = value - 273.15;
+                    break;
+            }
+            
+            
+            switch (toUnit) {
+                case 'c':
+                    return celsius;
+                case 'f':
+                    return celsius * 9 / 5 + 32;
+                case 'k':
+                    return celsius + 273.15;
+            }
+        }
+        
+        
+        function convert(type) {
+            const fromValue = parseFloat(document.getElementById(`${type}-from`).value);
+            
+            if (isNaN(fromValue)) {
+                alert("Please enter a valid number");
+                return;
+            }
+            
+            const fromUnit = document.getElementById(`${type}-from-unit`).value;
+            const toUnit = document.getElementById(`${type}-to-unit`).value;
+            let result;
+            
+            if (type === 'temperature') {
+                result = convertTemperature(fromValue, fromUnit, toUnit);
+            } else {
+                const fromFactor = conversionFactors[type][fromUnit];
+                const toFactor = conversionFactors[type][toUnit];
+                result = fromValue * (fromFactor / toFactor);
+            }
+            
+            document.getElementById(`${type}-to`).value = result.toFixed(6);
+        }
+        
+        
+        function swap(type) {
+            const fromUnitSelect = document.getElementById(`${type}-from-unit`);
+            const toUnitSelect = document.getElementById(`${type}-to-unit`);
+            
+            const tempUnit = fromUnitSelect.value;
+            fromUnitSelect.value = toUnitSelect.value;
+            toUnitSelect.value = tempUnit;
+            
+            const fromValueInput = document.getElementById(`${type}-from`);
+            const toValueInput = document.getElementById(`${type}-to`);
+            
+            if (fromValueInput.value !== '' && toValueInput.value !== '') {
+                const tempValue = fromValueInput.value;
+                fromValueInput.value = toValueInput.value;
+                toValueInput.value = '';
+            }
+        }
+    </script>
+</body>
+</html>
